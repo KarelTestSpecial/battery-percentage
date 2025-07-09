@@ -11,5 +11,5 @@ The extension does use Chrome's local storage feature for one specific purpose: 
 
 Contact & Support
 
-If you have any questions about this privacy policy, you can contact us via email: karel.test.special@gmail.com . 
+If you have any questions about this privacy policy, you can contact us via email: [karel.test.special@gmail.com] .  
 For technical support, bug reports, or feature requests, please open a new issue on our GitHub page: https://github.com/KarelTestSpecial/live-battery-percentage/issues
