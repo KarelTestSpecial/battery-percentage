@@ -81,8 +81,8 @@ chrome.runtime.onInstalled.addListener((details) => {
     chrome.notifications.create('welcomeNotification', {
       type: 'basic',
       iconUrl: 'icon128.png',
-      title: 'Bedankt voor het installeren!',
-      message: 'Klik op de cijfers in de pop-up om de instellingen te openen en alarmen te configureren.'
+      title: 'Thanks for installing!',
+      message: 'Click the numbers in the pop-up to open settings and configure alarms.'
     });
   }
 });
