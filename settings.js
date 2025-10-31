@@ -45,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     durationInput.type = 'number';
     durationInput.min = 1;
     durationInput.value = alarm.duration;
+    durationInput.classList.add('duration-input');
     container.appendChild(durationInput);
 
     if (type === 'charging') {
@@ -73,6 +74,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
       chargingAlarmsContainer.innerHTML = '';
       dischargingAlarmsContainer.innerHTML = '';
+
+      // Sort alarms by percentage in descending order
+      alarms.charging.sort((a, b) => b.percentage - a.percentage);
 
       alarms.charging.forEach((alarm, index) => createAlarmUI(alarm, index, 'charging'));
       alarms.discharging.forEach((alarm, index) => createAlarmUI(alarm, index, 'discharging'));
