@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Battery Percentage",
-  "version": "1.6.5",
+  "version": "1.6.6",
   "description": "Displays the battery percentage in digital form on the toolbar or its own floating window, and sends smart notifications.",
   "permissions": [
     "alarms",
@@ -23,7 +23,7 @@
   },
   "web_accessible_resources": [
     {
-      "resources": [ "notification.wav", "alarm.wav" ],
+      "resources": [ "sounds/notification.wav", "sounds/alarm.wav" ],
       "matches": [ "<all_urls>" ]
     }
   ]

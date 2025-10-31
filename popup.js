@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', async () => {
   const batteryPercentageElement = document.getElementById('battery-percentage');
+  const body = document.body;
 
   function updateBatteryStatus(percentage) {
     batteryPercentageElement.textContent = `${percentage}%`;
@@ -11,13 +12,28 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   });
 
+  // Load the saved mode
+  chrome.storage.local.get(['darkMode'], function(result) {
+    if (result.darkMode) {
+      body.classList.add('dark-mode');
+    }
+  });
+
+  // Wissel van donkere modus bij klikken
+  batteryPercentageElement.addEventListener('click', () => {
+    chrome.windows.create({
+      url: 'settings.html',
+      type: 'popup',
+      width: 400,
+      height: 600
+    });
+  });
+
   try {
     const battery = await navigator.getBattery();
     const percentage = Math.round(battery.level * 100);
     updateBatteryStatus(percentage);
   } catch (error) {
-    // In Manifest V3, navigator.getBattery is not available in popups.
-    // We need to request the battery status from the background script.
     chrome.runtime.sendMessage({ type: 'getBatteryStatus' });
   }
 });

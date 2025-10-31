@@ -100,9 +100,9 @@ async function updateIcon() {
 }
 
 // Function to play the notification sound
-function playNotificationSound(soundType) {
+function playNotificationSound(soundPath) {
   let sound;
-  if (soundType === 'alarm') {
+  if (soundPath === 'sounds/alarm.wav') {
     sound = document.getElementById('alarmSound');
   } else {
     sound = document.getElementById('notificationSound');

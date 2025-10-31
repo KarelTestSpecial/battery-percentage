@@ -8,20 +8,25 @@
       padding: 10px;
       font-family: sans-serif;
       text-align: center;
+      overflow: hidden; /* Prevent scrollbars */
+      background-color: #ffffff; /* Light mode background */
+      color: #000000; /* Light mode text */
+      transition: background-color 0.3s, color 0.3s;
+    }
+    body.dark-mode {
+      background-color: #333333; /* Dark mode background */
+      color: #ffffff; /* Dark mode text */
     }
     #battery-percentage {
-      font-size: 2em;
+      font-size: 5em; /* Large font size */
       font-weight: bold;
-    }
-    #settings-link {
-      margin-top: 10px;
-      display: block;
+      white-space: nowrap; /* Prevent wrapping */
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
   <div id="battery-percentage"></div>
-  <a href="settings.html" id="settings-link" target="_blank">Settings</a>
   <script src="popup.js"></script>
 </body>
 </html>

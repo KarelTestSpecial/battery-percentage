@@ -2,6 +2,20 @@ document.addEventListener('DOMContentLoaded', () => {
   const chargingAlarmsContainer = document.getElementById('charging-alarms');
   const dischargingAlarmsContainer = document.getElementById('discharging-alarms');
   const saveButton = document.getElementById('save-button');
+  const soundSelectPreview = document.getElementById('sound-select');
+  const playSoundButton = document.getElementById('play-sound-button');
+
+  const sounds = [
+    { name: 'Notification', path: 'sounds/notification.wav' },
+    { name: 'Alarm', path: 'sounds/alarm.wav' },
+  ];
+
+  const populateSoundDropdown = (selectElement) => {
+    sounds.forEach(sound => {
+      const option = new Option(sound.name, sound.path);
+      selectElement.add(option);
+    });
+  };
 
   const createAlarmUI = (alarm, index, type) => {
     const container = document.createElement('div');
@@ -20,10 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
     container.appendChild(percentageInput);
 
     const soundSelect = document.createElement('select');
-    const notificationOption = new Option('Notification', 'notification.wav');
-    const alarmOption = new Option('Alarm', 'alarm.wav');
-    soundSelect.add(notificationOption);
-    soundSelect.add(alarmOption);
+    populateSoundDropdown(soundSelect);
     soundSelect.value = alarm.sound;
     container.appendChild(soundSelect);
 
@@ -44,16 +55,16 @@ document.addEventListener('DOMContentLoaded', () => {
     chrome.storage.local.get('alarms', (result) => {
       const alarms = result.alarms || {
         charging: [
-          { enabled: false, percentage: 80, sound: 'notification.wav', duration: 1 },
-          { enabled: false, percentage: 90, sound: 'notification.wav', duration: 1 },
-          { enabled: false, percentage: 95, sound: 'notification.wav', duration: 1 },
-          { enabled: false, percentage: 100, sound: 'alarm.wav', duration: 5 },
+          { enabled: false, percentage: 100, sound: 'sounds/alarm.wav', duration: 5 },
+          { enabled: false, percentage: 95, sound: 'sounds/notification.wav', duration: 1 },
+          { enabled: false, percentage: 90, sound: 'sounds/notification.wav', duration: 1 },
+          { enabled: false, percentage: 85, sound: 'sounds/notification.wav', duration: 1 },
         ],
         discharging: [
-          { enabled: true, percentage: 22, sound: 'notification.wav', duration: 1 },
-          { enabled: true, percentage: 15, sound: 'alarm.wav', duration: 5 },
-          { enabled: false, percentage: 10, sound: 'alarm.wav', duration: 5 },
-          { enabled: false, percentage: 5, sound: 'alarm.wav', duration: 5 },
+          { enabled: true, percentage: 22, sound: 'sounds/notification.wav', duration: 1 },
+          { enabled: true, percentage: 16, sound: 'sounds/alarm.wav', duration: 5 },
+          { enabled: false, percentage: 12, sound: 'sounds/alarm.wav', duration: 5 },
+          { enabled: false, percentage: 8, sound: 'sounds/alarm.wav', duration: 5 },
         ],
       };
 
@@ -91,7 +102,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
 
+  playSoundButton.addEventListener('click', () => {
+    const selectedSound = soundSelectPreview.value;
+    chrome.runtime.sendMessage({ type: 'playSound', sound: selectedSound });
+  });
+
   saveButton.addEventListener('click', saveSettings);
 
+  populateSoundDropdown(soundSelectPreview);
   loadSettings();
 });
