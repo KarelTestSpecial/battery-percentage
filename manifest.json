@@ -22,7 +22,7 @@
   },
   "web_accessible_resources": [
     {
-      "resources": [ "notification.wav" ],
+      "resources": [ "notification.wav", "alarm.wav" ],
       "matches": [ "<all_urls>" ]
     }
   ]

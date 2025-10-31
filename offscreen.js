@@ -11,8 +11,8 @@ async function updateIcon() {
     if (battery.charging && (level === 100 || level === 88)) {
       chrome.runtime.sendMessage({ type: 'showNotification', level: level });
     }
-    if (!battery.charging && level === 22) {
-      chrome.runtime.sendMessage({ type: 'showNotification', level: 22 });
+    if (!battery.charging && (level === 22 || level === 15)) {
+      chrome.runtime.sendMessage({ type: 'showNotification', level: level });
     }
 
     // --- Icon Drawing Logic ---
@@ -100,8 +100,13 @@ async function updateIcon() {
 }
 
 // Function to play the notification sound
-function playNotificationSound() {
-  const sound = document.getElementById('notificationSound');
+function playNotificationSound(soundType) {
+  let sound;
+  if (soundType === 'alarm') {
+    sound = document.getElementById('alarmSound');
+  } else {
+    sound = document.getElementById('notificationSound');
+  }
   sound.play();
 }
 
@@ -112,7 +117,7 @@ chrome.runtime.onMessage.addListener((msg) => {
       updateIcon();
       break;
     case 'playSound':
-      playNotificationSound();
+      playNotificationSound(msg.sound);
       break;
   }
 });

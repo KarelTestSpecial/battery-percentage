@@ -29,6 +29,8 @@ async function showNotificationForLevel(level) {
   let message = `Your battery has reached ${level}%!`;
   if (level === 22) {
     message = `Your battery is getting low (${level}%)!`;
+  } else if (level === 15) {
+    message = `Your battery is critically low (${level}%)! Please connect your charger.`;
   }
 
   // Creëer de notificatie.
@@ -40,7 +42,11 @@ async function showNotificationForLevel(level) {
   });
 
   // Play sound
-  chrome.runtime.sendMessage({ type: 'playSound' });
+  if (level === 15) {
+    chrome.runtime.sendMessage({ type: 'playSound', sound: 'alarm' });
+  } else {
+    chrome.runtime.sendMessage({ type: 'playSound', sound: 'notification' });
+  }
 
   await chrome.storage.local.set({ [notificationKey]: true });
 }
@@ -62,9 +68,12 @@ chrome.runtime.onMessage.addListener((msg, sender) => {
           if (storage.notified_88 && msg.level < 88) chrome.storage.local.set({ notified_88: false });
         });
       } else {
-        chrome.storage.local.get(['notified_22']).then(storage => {
+        chrome.storage.local.get(['notified_22', 'notified_15']).then(storage => {
           if (storage.notified_22 && msg.level > 22) {
             chrome.storage.local.set({ notified_22: false });
+          }
+          if (storage.notified_15 && msg.level > 15) {
+            chrome.storage.local.set({ notified_15: false });
           }
         });
       }
