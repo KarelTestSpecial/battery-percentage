@@ -8,6 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const sounds = [
     { name: 'Notification', path: 'sounds/notification.wav' },
     { name: 'Alarm', path: 'sounds/alarm.wav' },
+    { name: 'Beep', path: 'sounds/beep.mp3' },
+    { name: 'Bell', path: 'sounds/bell.mp3' },
+    { name: 'Digital', path: 'sounds/digital.mp3' },
   ];
 
   const populateSoundDropdown = (selectElement) => {

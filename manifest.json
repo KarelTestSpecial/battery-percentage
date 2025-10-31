@@ -23,7 +23,13 @@
   },
   "web_accessible_resources": [
     {
-      "resources": [ "sounds/notification.wav", "sounds/alarm.wav" ],
+      "resources": [
+        "sounds/notification.wav",
+        "sounds/alarm.wav",
+        "sounds/beep.mp3",
+        "sounds/bell.mp3",
+        "sounds/digital.mp3"
+      ],
       "matches": [ "<all_urls>" ]
     }
   ]
