@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Battery Percentage",
-  "version": "1.6.5",
+  "version": "1.6.6",
   "description": "Displays the battery percentage in digital form on the toolbar or its own floating window, and sends smart notifications.",
   "permissions": [
     "alarms",
@@ -12,7 +12,7 @@
     "windows"
   ],
   "action": {
-    "default_title": "Battery Percentage (Click to refresh)"
+    "default_title": "Battery Percentage (Click in popup for settings)"
   },
   "background": {
     "service_worker": "background.js"
@@ -22,7 +22,13 @@
   },
   "web_accessible_resources": [
     {
-      "resources": [ "notification.wav" ],
+      "resources": [
+        "sounds/notification.wav",
+        "sounds/alarm.wav",
+        "sounds/beep.mp3",
+        "sounds/bell.mp3",
+        "sounds/digital.mp3"
+      ],
       "matches": [ "<all_urls>" ]
     }
   ]

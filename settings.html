@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Battery Alarm Settings</title>
+  <style>
+    body {
+      padding: 10px;
+      font-family: sans-serif;
+    }
+    h1, h2 {
+      text-align: center;
+    }
+    h1 {
+      margin-top: 0;
+    }
+    .alarm-group {
+      margin-bottom: 20px;
+    }
+    .alarm-settings {
+      display: flex;
+      justify-content: center; /* Center items horizontally */
+      align-items: center;
+      margin-bottom: 10px;
+      gap: 10px; /* Add space between elements */
+    }
+    .controls-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-top: 20px;
+    }
+    .left-controls, .right-controls {
+      display: flex;
+      flex-direction: column;
+    }
+    .right-controls .sound-preview-inner {
+      display: flex;
+    }
+    #dark-mode-container {
+      margin-top: 10px;
+    }
+    .percentage-input {
+      width: 50px;
+    }
+    .sound-select-input {
+      width: 120px;
+    }
+    .duration-input {
+      width: 50px;
+    }
+
+    /* Consistent base styles for form elements */
+    select, button, input[type="number"] {
+      border: 1px solid #ccc;
+      padding: 4px;
+      border-radius: 3px;
+      background-color: #fff;
+    }
+
+    body.dark-mode {
+      background-color: #333;
+      color: #f1f1f1;
+    }
+    body.dark-mode select, body.dark-mode button, body.dark-mode input {
+      background-color: #555;
+      color: #f1f1f1;
+      border: 1px solid #777;
+    }
+  </style>
+</head>
+<body>
+  <h1>Alarm Settings</h1>
+
+  <div class="alarm-group">
+    <h2>Charging Alarms</h2>
+    <div id="charging-alarms"></div>
+  </div>
+
+  <div class="alarm-group">
+    <h2>Discharging Alarms</h2>
+    <div id="discharging-alarms"></div>
+  </div>
+
+  <div class="controls-container">
+    <div class="left-controls">
+      <button id="save-button">Save Settings</button>
+      <div id="dark-mode-container">
+        <label for="dark-mode-toggle">Dark Mode</label>
+        <input type="checkbox" id="dark-mode-toggle" />
+      </div>
+    </div>
+    <div class="right-controls">
+      <label>Sound Preview</label>
+      <div class="sound-preview-inner">
+        <select id="sound-select"></select>
+        <button id="play-sound-button">Play</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="settings.js"></script>
+</body>
+</html>

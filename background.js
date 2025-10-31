@@ -1,5 +1,4 @@
 const OFFSCREEN_DOCUMENT_PATH = '/offscreen.html';
-let displayWindowId = null;
 
 async function getBatteryStatus() {
   if (!(await chrome.offscreen.hasDocument())) {
@@ -12,112 +11,91 @@ async function getBatteryStatus() {
   chrome.runtime.sendMessage({ type: 'getBatteryStatus' });
 }
 
-// Functie om de notificatie te tonen
-async function showNotificationForLevel(level) {
+async function checkAlarms(level, isCharging) {
+  const { alarms } = await chrome.storage.local.get('alarms');
+  if (!alarms) return;
+
+  const alarmType = isCharging ? 'charging' : 'discharging';
+  const relevantAlarms = alarms[alarmType];
+
+  for (const alarm of relevantAlarms) {
+    if (!alarm.enabled) continue;
+
+    const notificationKey = `notified_${alarmType}_${alarm.percentage}`;
+    const { [notificationKey]: notified } = await chrome.storage.local.get(notificationKey);
+
+    const conditionMet = isCharging ? level >= alarm.percentage : level <= alarm.percentage;
+
+    if (conditionMet && !notified) {
+      showNotification(alarm);
+      await chrome.storage.local.set({ [notificationKey]: true });
+    } else if (!conditionMet && notified) {
+      await chrome.storage.local.set({ [notificationKey]: false });
+    }
+  }
+}
+
+async function showNotification(alarm) {
   const state = await chrome.idle.queryState(15);
   if (state === 'locked') {
     return;
   }
 
-  const notificationKey = `notified_${level}`;
-  
-  const storage = await chrome.storage.local.get(notificationKey);
-  if (storage[notificationKey]) {
-    return;
-  }
+  const message = `Your battery has reached ${alarm.percentage}%!`;
 
-  let message = `Your battery has reached ${level}%!`;
-  if (level === 22) {
-    message = `Your battery is getting low (${level}%)!`;
-  }
-
-  // Creëer de notificatie.
-  chrome.notifications.create(notificationKey, {
+  chrome.notifications.create({
     type: 'basic',
     iconUrl: 'icon128.png',
     title: 'Battery Notification',
     message: message
   });
 
-  // Play sound
-  chrome.runtime.sendMessage({ type: 'playSound' });
-
-  await chrome.storage.local.set({ [notificationKey]: true });
+  chrome.runtime.sendMessage({ type: 'playSound', sound: alarm.sound, duration: alarm.duration });
 }
 
-// De hoofd-bericht-handler
-chrome.runtime.onMessage.addListener((msg, sender) => {
+chrome.runtime.onMessage.addListener((msg) => {
   switch (msg.type) {
+    case 'getBatteryStatus':
+      getBatteryStatus();
+      break;
     case 'batteryIcon':
       const pixelData = Uint8ClampedArray.from(msg.imageDataPayload.data);
       const imageData = new ImageData(pixelData, msg.imageDataPayload.width, msg.imageDataPayload.height);
       chrome.action.setIcon({ imageData: imageData });
 
-      // Stuur de update naar het display venster
       chrome.runtime.sendMessage({ type: 'batteryUpdate', level: msg.level });
 
-      if (msg.isCharging) {
-        chrome.storage.local.get(['notified_88', 'notified_100']).then(storage => {
-          if (storage.notified_100 && msg.level < 100) chrome.storage.local.set({ notified_100: false });
-          if (storage.notified_88 && msg.level < 88) chrome.storage.local.set({ notified_88: false });
-        });
-      } else {
-        chrome.storage.local.get(['notified_22']).then(storage => {
-          if (storage.notified_22 && msg.level > 22) {
-            chrome.storage.local.set({ notified_22: false });
-          }
-        });
-      }
-      break;
-
-    case 'showNotification':
-      showNotificationForLevel(msg.level);
-      break;
-
-    case 'resize_window':
-      if (sender.tab && sender.tab.windowId) {
-        chrome.windows.update(sender.tab.windowId, { width: msg.width, height: msg.height });
-      }
+      checkAlarms(msg.level, msg.isCharging);
       break;
   }
 });
 
-// Listener for when the display window is closed
-chrome.windows.onRemoved.addListener((windowId) => {
-  if (windowId === displayWindowId) {
-    displayWindowId = null;
-  }
-});
-
-chrome.action.onClicked.addListener(async () => {
-  // Immediately update the battery status on click
-  getBatteryStatus();
-
-  if (displayWindowId !== null) {
-    try {
-      await chrome.windows.update(displayWindowId, { focused: true });
-    } catch (error) {
-      // The window was closed without us knowing
-      displayWindowId = null;
-    }
-  }
-
-  if (displayWindowId === null) {
-    const createData = {
-      url: chrome.runtime.getURL("battery_display.html"),
-      type: "popup",
-      focused: true,
-      width: 200,
-      height: 100
-    };
-    const window = await chrome.windows.create(createData);
-    displayWindowId = window.id;
-  }
+chrome.action.onClicked.addListener(() => {
+  chrome.windows.create({
+    url: 'battery_display.html',
+    type: 'popup',
+    width: 220,
+    height: 130
+  });
 });
 
 // Bestaande triggers blijven hetzelfde
 chrome.runtime.onStartup.addListener(getBatteryStatus);
-chrome.runtime.onInstalled.addListener(getBatteryStatus);
+
+chrome.runtime.onInstalled.addListener((details) => {
+  getBatteryStatus(); // Voer de batterij-check uit zoals voorheen.
+
+  // Toon een welkomst- of updatemelding.
+  if (details.reason === 'install' || details.reason === 'update') {
+    chrome.notifications.create('welcomeNotification', {
+      type: 'basic',
+      iconUrl: 'icon128.png',
+      title: 'Thanks for installing!',
+      message: 'Click the numbers in the pop-up to open settings and configure alarms.'
+    });
+  }
+});
+
 chrome.alarms.create('batteryCheck', { periodInMinutes: 1 });
 chrome.alarms.onAlarm.addListener((alarm) => {
   if (alarm.name === 'batteryCheck') {
