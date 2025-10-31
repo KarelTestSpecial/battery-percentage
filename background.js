@@ -72,7 +72,21 @@ chrome.runtime.onMessage.addListener((msg) => {
 
 // Bestaande triggers blijven hetzelfde
 chrome.runtime.onStartup.addListener(getBatteryStatus);
-chrome.runtime.onInstalled.addListener(getBatteryStatus);
+
+chrome.runtime.onInstalled.addListener((details) => {
+  getBatteryStatus(); // Voer de batterij-check uit zoals voorheen.
+
+  // Toon een welkomst- of updatemelding.
+  if (details.reason === 'install' || details.reason === 'update') {
+    chrome.notifications.create('welcomeNotification', {
+      type: 'basic',
+      iconUrl: 'icon128.png',
+      title: 'Bedankt voor het installeren!',
+      message: 'Klik op de cijfers in de pop-up om de instellingen te openen en alarmen te configureren.'
+    });
+  }
+});
+
 chrome.alarms.create('batteryCheck', { periodInMinutes: 1 });
 chrome.alarms.onAlarm.addListener((alarm) => {
   if (alarm.name === 'batteryCheck') {

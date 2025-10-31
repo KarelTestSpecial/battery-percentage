@@ -12,7 +12,7 @@
     "windows"
   ],
   "action": {
-    "default_title": "Battery Percentage (Click to refresh)",
+    "default_title": "Battery Percentage (Klik op cijfers voor instellingen)",
     "default_popup": "popup.html"
   },
   "background": {
