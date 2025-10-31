@@ -12,8 +12,7 @@
     "windows"
   ],
   "action": {
-    "default_title": "Battery Percentage (Click in popup for settings)",
-    "default_popup": "popup.html"
+    "default_title": "Battery Percentage (Click in popup for settings)"
   },
   "background": {
     "service_worker": "background.js"

@@ -70,6 +70,15 @@ chrome.runtime.onMessage.addListener((msg) => {
   }
 });
 
+chrome.action.onClicked.addListener(() => {
+  chrome.windows.create({
+    url: 'battery_display.html',
+    type: 'popup',
+    width: 250,
+    height: 150
+  });
+});
+
 // Bestaande triggers blijven hetzelfde
 chrome.runtime.onStartup.addListener(getBatteryStatus);
 
