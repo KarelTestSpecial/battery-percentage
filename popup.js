@@ -13,11 +13,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 
   // Load the saved mode
-  chrome.storage.local.get(['darkMode'], function(result) {
-    if (result.darkMode) {
-      body.classList.add('dark-mode');
-    }
-  });
+  const applyDarkMode = (isDarkMode) => {
+    document.body.classList.toggle('dark-mode', isDarkMode);
+  };
+
+  const loadDarkModeSetting = () => {
+    chrome.storage.local.get('darkMode', (result) => {
+      applyDarkMode(result.darkMode || false);
+    });
+  };
+
+  loadDarkModeSetting();
 
   // Wissel van donkere modus bij klikken
   batteryPercentageElement.addEventListener('click', () => {

@@ -117,6 +117,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
   saveButton.addEventListener('click', saveSettings);
 
+  const darkModeToggle = document.getElementById('dark-mode-toggle');
+
+  const applyDarkMode = (isDarkMode) => {
+    document.body.classList.toggle('dark-mode', isDarkMode);
+    darkModeToggle.checked = isDarkMode;
+  };
+
+  darkModeToggle.addEventListener('change', () => {
+    chrome.storage.local.set({ darkMode: darkModeToggle.checked });
+    applyDarkMode(darkModeToggle.checked);
+  });
+
+  const loadDarkModeSetting = () => {
+    chrome.storage.local.get('darkMode', (result) => {
+      applyDarkMode(result.darkMode || false);
+    });
+  };
+
   populateSoundDropdown(soundSelectPreview);
   loadSettings();
+  loadDarkModeSetting();
 });

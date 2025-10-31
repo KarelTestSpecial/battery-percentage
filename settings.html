@@ -22,6 +22,15 @@
     .duration-input {
       width: 50px;
     }
+    body.dark-mode {
+      background-color: #333;
+      color: #f1f1f1;
+    }
+    body.dark-mode select, body.dark-mode button, body.dark-mode input {
+      background-color: #555;
+      color: #f1f1f1;
+      border: 1px solid #777;
+    }
   </style>
 </head>
 <body>
@@ -38,6 +47,11 @@
   </div>
 
   <button id="save-button">Save Settings</button>
+
+  <div id="dark-mode-container">
+    <label for="dark-mode-toggle">Dark Mode</label>
+    <input type="checkbox" id="dark-mode-toggle">
+  </div>
 
   <div id="sound-preview">
     <h3>Sound Preview</h3>
