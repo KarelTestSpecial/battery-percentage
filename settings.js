@@ -62,11 +62,12 @@ document.addEventListener('DOMContentLoaded', () => {
           { enabled: false, percentage: 100, sound: 'sounds/alarm.wav', duration: 5 },
           { enabled: false, percentage: 95, sound: 'sounds/notification.wav', duration: 1 },
           { enabled: false, percentage: 90, sound: 'sounds/notification.wav', duration: 1 },
+          { enabled: true, percentage: 88, sound: 'sounds/notification.wav', duration: 1 },
           { enabled: false, percentage: 85, sound: 'sounds/notification.wav', duration: 1 },
         ],
         discharging: [
           { enabled: true, percentage: 22, sound: 'sounds/notification.wav', duration: 1 },
-          { enabled: true, percentage: 16, sound: 'sounds/alarm.wav', duration: 5 },
+          { enabled: false, percentage: 16, sound: 'sounds/alarm.wav', duration: 5 },
           { enabled: false, percentage: 12, sound: 'sounds/alarm.wav', duration: 5 },
           { enabled: false, percentage: 8, sound: 'sounds/alarm.wav', duration: 5 },
         ],
