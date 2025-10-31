@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Battery Alarm Settings</title>
+  <style>
+    body {
+      padding: 10px;
+      font-family: sans-serif;
+    }
+    h1, h2 {
+      text-align: center;
+    }
+    .alarm-group {
+      margin-bottom: 20px;
+    }
+    .alarm-settings {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Alarm Settings</h1>
+
+  <div class="alarm-group">
+    <h2>Charging Alarms</h2>
+    <div id="charging-alarms"></div>
+  </div>
+
+  <div class="alarm-group">
+    <h2>Discharging Alarms</h2>
+    <div id="discharging-alarms"></div>
+  </div>
+
+  <button id="save-button">Save Settings</button>
+
+  <script src="settings.js"></script>
+</body>
+</html>
