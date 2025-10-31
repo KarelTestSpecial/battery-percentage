@@ -101,13 +101,10 @@ async function updateIcon() {
 
 // Function to play the notification sound
 function playNotificationSound(soundPath) {
-  let sound;
-  if (soundPath === 'sounds/alarm.wav') {
-    sound = document.getElementById('alarmSound');
-  } else {
-    sound = document.getElementById('notificationSound');
+  if (soundPath) {
+    const sound = new Audio(soundPath);
+    sound.play();
   }
-  sound.play();
 }
 
 // Luister naar berichten van het background script
