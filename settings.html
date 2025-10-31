@@ -15,9 +15,32 @@
     }
     .alarm-settings {
       display: flex;
-      justify-content: space-around;
+      justify-content: center; /* Center items horizontally */
       align-items: center;
       margin-bottom: 10px;
+      gap: 10px; /* Add space between elements */
+    }
+    .controls-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-top: 20px;
+    }
+    .left-controls, .right-controls {
+      display: flex;
+      flex-direction: column;
+    }
+    .right-controls .sound-preview-inner {
+      display: flex;
+    }
+    #dark-mode-container {
+      margin-top: 10px;
+    }
+    .percentage-input {
+      width: 50px;
+    }
+    .sound-select-input {
+      width: 120px;
     }
     .duration-input {
       width: 50px;
@@ -46,17 +69,21 @@
     <div id="discharging-alarms"></div>
   </div>
 
-  <button id="save-button">Save Settings</button>
-
-  <div id="dark-mode-container">
-    <label for="dark-mode-toggle">Dark Mode</label>
-    <input type="checkbox" id="dark-mode-toggle">
-  </div>
-
-  <div id="sound-preview">
-    <h3>Sound Preview</h3>
-    <select id="sound-select"></select>
-    <button id="play-sound-button">Play</button>
+  <div class="controls-container">
+    <div class="left-controls">
+      <button id="save-button">Save Settings</button>
+      <div id="dark-mode-container">
+        <label for="dark-mode-toggle">Dark Mode</label>
+        <input type="checkbox" id="dark-mode-toggle" />
+      </div>
+    </div>
+    <div class="right-controls">
+      <label>Sound Preview</label>
+      <div class="sound-preview-inner">
+        <select id="sound-select"></select>
+        <button id="play-sound-button">Play</button>
+      </div>
+    </div>
   </div>
 
   <script src="settings.js"></script>

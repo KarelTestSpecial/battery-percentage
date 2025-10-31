@@ -34,11 +34,13 @@ document.addEventListener('DOMContentLoaded', () => {
     percentageInput.min = 0;
     percentageInput.max = 100;
     percentageInput.value = alarm.percentage;
+    percentageInput.classList.add('percentage-input');
     container.appendChild(percentageInput);
 
     const soundSelect = document.createElement('select');
     populateSoundDropdown(soundSelect);
     soundSelect.value = alarm.sound;
+    soundSelect.classList.add('sound-select-input');
     container.appendChild(soundSelect);
 
     const durationInput = document.createElement('input');
