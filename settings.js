@@ -107,7 +107,11 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    chrome.storage.local.set({ alarms: { charging: chargingAlarms, discharging: dischargingAlarms } }, () => {
+    const textColor = document.getElementById('text-color-picker').value;
+    chrome.storage.local.set({
+      alarms: { charging: chargingAlarms, discharging: dischargingAlarms },
+      textColor: textColor
+    }, () => {
       alert('Settings saved!');
     });
   };
@@ -137,7 +141,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
 
+  const loadTextColorSetting = () => {
+    chrome.storage.local.get('textColor', (result) => {
+      const textColorPicker = document.getElementById('text-color-picker');
+      textColorPicker.value = result.textColor || '#FFFFFF';
+    });
+  };
+
   populateSoundDropdown(soundSelectPreview);
   loadSettings();
   loadDarkModeSetting();
+  loadTextColorSetting();
 });
