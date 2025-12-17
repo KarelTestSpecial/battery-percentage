@@ -113,6 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
       textColor: textColor
     }, () => {
       alert('Settings saved!');
+      chrome.runtime.sendMessage({ type: 'getBatteryStatus' });
     });
   };
 
