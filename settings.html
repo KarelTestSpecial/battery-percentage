@@ -23,15 +23,18 @@
       margin-bottom: 10px;
       gap: 10px; /* Add space between elements */
     }
-    .main-controls-container {
+    .controls-container {
       display: flex;
-      justify-content: space-around;
-      align-items: flex-end;
-      margin-top: 20px;
+      flex-direction: column;
       gap: 15px;
-      flex-wrap: wrap;
+      margin-top: 20px;
     }
-    #dark-mode-container, #text-color-container {
+    .top-row, .bottom-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    #text-color-container, #dark-mode-container {
       display: flex;
       align-items: center;
       gap: 5px;
@@ -43,10 +46,6 @@
     }
     .sound-preview-inner {
       display: flex;
-    }
-    .save-button-container {
-      margin-top: 20px;
-      text-align: center;
     }
     .percentage-input {
       width: 50px;
@@ -90,26 +89,27 @@
     <div id="discharging-alarms"></div>
   </div>
 
-  <div class="main-controls-container">
-    <div id="dark-mode-container">
-      <label for="dark-mode-toggle">Dark Mode</label>
-      <input type="checkbox" id="dark-mode-toggle" />
-    </div>
-    <div id="text-color-container">
-      <label for="text-color-picker">Text Color</label>
-      <input type="color" id="text-color-picker" value="#FFFFFF">
-    </div>
-    <div class="sound-preview-container">
-      <label>Sound Preview</label>
-      <div class="sound-preview-inner">
-        <select id="sound-select"></select>
-        <button id="play-sound-button">Play</button>
+  <div class="controls-container">
+    <div class="top-row">
+      <div id="text-color-container">
+        <label for="text-color-picker">Text Color</label>
+        <input type="color" id="text-color-picker" value="#FFFFFF">
+      </div>
+      <div class="sound-preview-container">
+        <label>Sound Preview</label>
+        <div class="sound-preview-inner">
+          <select id="sound-select"></select>
+          <button id="play-sound-button">Play</button>
+        </div>
       </div>
     </div>
-  </div>
-
-  <div class="save-button-container">
-    <button id="save-button">Save Settings</button>
+    <div class="bottom-row">
+      <div id="dark-mode-container">
+        <label for="dark-mode-toggle">Dark Mode</label>
+        <input type="checkbox" id="dark-mode-toggle" />
+      </div>
+      <button id="save-button">Save Settings</button>
+    </div>
   </div>
 
   <script src="settings.js"></script>
