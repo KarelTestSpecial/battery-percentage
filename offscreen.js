@@ -1,8 +1,9 @@
-async function updateIcon() {
+// Function to read the battery status and draw the dynamic icon.
+async function updateIcon(userTextColor) {
   console.log("Executing updateIcon...");
 
   try {
-    const { textColor: userTextColor } = await chrome.storage.local.get('textColor');
+    // 1. Get battery information
     const battery = await navigator.getBattery();
     const level = Math.floor(battery.level * 100);
 
@@ -99,14 +100,10 @@ function playNotificationSound(soundPath) {
 chrome.runtime.onMessage.addListener((msg) => {
   switch (msg.type) {
     case 'getBatteryStatus':
-      updateIcon();
+      updateIcon(msg.textColor);
       break;
     case 'playSound':
       playNotificationSound(msg.sound);
       break;
   }
 });
-
-// Initial call to set the icon when the offscreen document is created
-updateIcon();
-setInterval(updateIcon, 60000);

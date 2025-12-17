@@ -8,7 +8,8 @@ async function getBatteryStatus() {
       justification: 'Required to use the Battery Status API, Canvas API and play audio.',
     });
   }
-  chrome.runtime.sendMessage({ type: 'getBatteryStatus' });
+  const { textColor } = await chrome.storage.local.get('textColor');
+  chrome.runtime.sendMessage({ type: 'getBatteryStatus', textColor: textColor });
 }
 
 async function checkAlarms(level, isCharging) {
