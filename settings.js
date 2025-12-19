@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const saveButton = document.getElementById('save-button');
   const soundSelectPreview = document.getElementById('sound-select');
   const playSoundButton = document.getElementById('play-sound-button');
+  const volumeSlider = document.getElementById('volume-slider');
 
   const sounds = [
     { name: 'Notification', path: 'sounds/notification.wav' },
@@ -108,18 +109,31 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const textColor = document.getElementById('text-color-picker').value;
+    const volume = parseInt(volumeSlider.value, 10);
     chrome.storage.local.set({
       alarms: { charging: chargingAlarms, discharging: dischargingAlarms },
-      textColor: textColor
+      textColor: textColor,
+      volume: volume
     }, () => {
       alert('Settings saved!');
       chrome.runtime.sendMessage({ type: 'getBatteryStatus' });
     });
   };
 
+  let isPreviewPlaying = false;
+
   playSoundButton.addEventListener('click', () => {
-    const selectedSound = soundSelectPreview.value;
-    chrome.runtime.sendMessage({ type: 'playSound', sound: selectedSound });
+    if (!isPreviewPlaying) {
+        const selectedSound = soundSelectPreview.value;
+        const volume = parseInt(volumeSlider.value, 10);
+        chrome.runtime.sendMessage({ type: 'playSound', sound: selectedSound, volume: volume });
+        playSoundButton.textContent = 'Stop';
+        isPreviewPlaying = true;
+    } else {
+        chrome.runtime.sendMessage({ type: 'stopSound' });
+        // The button state will be reset when a 'soundFinished' message is received
+        // from the offscreen script, indicating the sound has actually stopped.
+    }
   });
 
   saveButton.addEventListener('click', saveSettings);
@@ -149,8 +163,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
 
+  const loadVolumeSetting = () => {
+    chrome.storage.local.get('volume', (result) => {
+      volumeSlider.value = result.volume !== undefined ? result.volume : 100;
+    });
+  };
+
   populateSoundDropdown(soundSelectPreview);
   loadSettings();
   loadDarkModeSetting();
   loadTextColorSetting();
+  loadVolumeSetting();
+
+  chrome.runtime.onMessage.addListener((msg) => {
+    if (msg.type === 'soundFinished') {
+        playSoundButton.textContent = 'Play';
+        isPreviewPlaying = false;
+    }
+  });
 });

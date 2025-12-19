@@ -51,7 +51,13 @@ async function showNotification(alarm) {
     message: message
   });
 
-  chrome.runtime.sendMessage({ type: 'playSound', sound: alarm.sound, duration: alarm.duration });
+  const { volume } = await chrome.storage.local.get('volume');
+  chrome.runtime.sendMessage({
+    type: 'playSound',
+    sound: alarm.sound,
+    duration: alarm.duration,
+    volume: volume !== undefined ? volume : 100
+  });
 }
 
 chrome.runtime.onMessage.addListener((msg) => {
@@ -82,6 +88,10 @@ chrome.action.onClicked.addListener(() => {
 
 // Bestaande triggers blijven hetzelfde
 chrome.runtime.onStartup.addListener(getBatteryStatus);
+
+chrome.notifications.onClicked.addListener(() => {
+  chrome.runtime.sendMessage({ type: 'stopSound' });
+});
 
 chrome.runtime.onInstalled.addListener((details) => {
   getBatteryStatus(); // Voer de batterij-check uit zoals voorheen.

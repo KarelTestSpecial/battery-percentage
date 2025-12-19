@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Battery Percentage",
-  "version": "1.7",
+  "version": "1.8",
   "description": "Displays the battery percentage in digital form on the toolbar or its own floating window, and sends smart notifications.",
   "permissions": [
     "alarms",

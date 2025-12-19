@@ -88,10 +88,66 @@ async function updateIcon(userTextColor) {
   }
 }
 
-// Function to play the notification sound
-function playNotificationSound(soundPath) {
-  if (soundPath) {
+// Web Audio API setup for volume amplification
+let audioContext;
+let currentSource = null;
+
+function getAudioContext() {
+  if (!audioContext) {
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  return audioContext;
+}
+
+function stopCurrentSound() {
+    if (currentSource) {
+        currentSource.stop();
+        currentSource = null;
+        // Also notify the UI that the sound has stopped
+        chrome.runtime.sendMessage({ type: 'soundFinished' });
+    }
+}
+
+// Function to play the notification sound using Web Audio API
+async function playNotificationSound(soundPath, volume) {
+  if (!soundPath) return;
+
+  stopCurrentSound();
+
+  try {
+    const context = getAudioContext();
+    if (context.state === 'suspended') {
+      await context.resume();
+    }
+
+    const response = await fetch(soundPath);
+    const arrayBuffer = await response.arrayBuffer();
+    const audioBuffer = await context.decodeAudioData(arrayBuffer);
+
+    const source = context.createBufferSource();
+    source.buffer = audioBuffer;
+    currentSource = source;
+
+    source.onended = () => {
+        if (currentSource === source) {
+            currentSource = null;
+        }
+        chrome.runtime.sendMessage({ type: 'soundFinished' });
+    };
+
+    const gainNode = context.createGain();
+    const gainValue = (volume !== undefined ? volume : 100) / 100;
+    gainNode.gain.value = gainValue;
+
+    source.connect(gainNode);
+    gainNode.connect(context.destination);
+
+    source.start(0);
+  } catch (error) {
+    console.error('Error playing sound with Web Audio API:', error);
+    // Fallback for safety
     const sound = new Audio(soundPath);
+    sound.volume = Math.min(1, (volume !== undefined ? volume : 100) / 100);
     sound.play();
   }
 }
@@ -103,7 +159,10 @@ chrome.runtime.onMessage.addListener((msg) => {
       updateIcon(msg.textColor);
       break;
     case 'playSound':
-      playNotificationSound(msg.sound);
+      playNotificationSound(msg.sound, msg.volume);
+      break;
+    case 'stopSound':
+      stopCurrentSound();
       break;
   }
 });
