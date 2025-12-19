@@ -89,9 +89,10 @@ async function updateIcon(userTextColor) {
 }
 
 // Function to play the notification sound
-function playNotificationSound(soundPath) {
+function playNotificationSound(soundPath, volume) {
   if (soundPath) {
     const sound = new Audio(soundPath);
+    sound.volume = volume !== undefined ? volume : 1;
     sound.play();
   }
 }
@@ -103,7 +104,7 @@ chrome.runtime.onMessage.addListener((msg) => {
       updateIcon(msg.textColor);
       break;
     case 'playSound':
-      playNotificationSound(msg.sound);
+      playNotificationSound(msg.sound, msg.volume);
       break;
   }
 });

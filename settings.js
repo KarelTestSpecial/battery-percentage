@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const saveButton = document.getElementById('save-button');
   const soundSelectPreview = document.getElementById('sound-select');
   const playSoundButton = document.getElementById('play-sound-button');
+  const volumeSlider = document.getElementById('volume-slider');
 
   const sounds = [
     { name: 'Notification', path: 'sounds/notification.wav' },
@@ -108,9 +109,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const textColor = document.getElementById('text-color-picker').value;
+    const volume = parseFloat(volumeSlider.value);
     chrome.storage.local.set({
       alarms: { charging: chargingAlarms, discharging: dischargingAlarms },
-      textColor: textColor
+      textColor: textColor,
+      volume: volume
     }, () => {
       alert('Settings saved!');
       chrome.runtime.sendMessage({ type: 'getBatteryStatus' });
@@ -119,7 +122,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   playSoundButton.addEventListener('click', () => {
     const selectedSound = soundSelectPreview.value;
-    chrome.runtime.sendMessage({ type: 'playSound', sound: selectedSound });
+    const volume = parseFloat(volumeSlider.value);
+    chrome.runtime.sendMessage({ type: 'playSound', sound: selectedSound, volume: volume });
   });
 
   saveButton.addEventListener('click', saveSettings);
@@ -149,8 +153,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
 
+  const loadVolumeSetting = () => {
+    chrome.storage.local.get('volume', (result) => {
+      volumeSlider.value = result.volume !== undefined ? result.volume : 1;
+    });
+  };
+
   populateSoundDropdown(soundSelectPreview);
   loadSettings();
   loadDarkModeSetting();
   loadTextColorSetting();
+  loadVolumeSetting();
 });

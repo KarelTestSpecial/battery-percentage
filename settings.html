@@ -34,7 +34,7 @@
       justify-content: space-between;
       align-items: center;
     }
-    #text-color-container, #dark-mode-container {
+    #text-color-container, #dark-mode-container, #volume-control-container {
       display: flex;
       align-items: center;
       gap: 5px;
@@ -103,6 +103,10 @@
     </div>
       
     <div class="bottom-row">
+        <div id="volume-control-container">
+            <label for="volume-slider">Volume</label>
+            <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="1">
+        </div>
       <div class="sound-preview-container">
         <div class="sound-preview-inner">
           <select id="sound-select"></select>
