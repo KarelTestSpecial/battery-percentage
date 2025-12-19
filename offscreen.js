@@ -103,6 +103,8 @@ function stopCurrentSound() {
     if (currentSource) {
         currentSource.stop();
         currentSource = null;
+        // Also notify the UI that the sound has stopped
+        chrome.runtime.sendMessage({ type: 'soundFinished' });
     }
 }
 
@@ -130,6 +132,7 @@ async function playNotificationSound(soundPath, volume) {
         if (currentSource === source) {
             currentSource = null;
         }
+        chrome.runtime.sendMessage({ type: 'soundFinished' });
     };
 
     const gainNode = context.createGain();

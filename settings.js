@@ -120,10 +120,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
 
+  let isPreviewPlaying = false;
+
   playSoundButton.addEventListener('click', () => {
-    const selectedSound = soundSelectPreview.value;
-    const volume = parseInt(volumeSlider.value, 10);
-    chrome.runtime.sendMessage({ type: 'playSound', sound: selectedSound, volume: volume });
+    if (!isPreviewPlaying) {
+        const selectedSound = soundSelectPreview.value;
+        const volume = parseInt(volumeSlider.value, 10);
+        chrome.runtime.sendMessage({ type: 'playSound', sound: selectedSound, volume: volume });
+        playSoundButton.textContent = 'Stop';
+        isPreviewPlaying = true;
+    } else {
+        chrome.runtime.sendMessage({ type: 'stopSound' });
+        // The button state will be reset when a 'soundFinished' message is received
+        // from the offscreen script, indicating the sound has actually stopped.
+    }
   });
 
   saveButton.addEventListener('click', saveSettings);
@@ -164,4 +174,11 @@ document.addEventListener('DOMContentLoaded', () => {
   loadDarkModeSetting();
   loadTextColorSetting();
   loadVolumeSetting();
+
+  chrome.runtime.onMessage.addListener((msg) => {
+    if (msg.type === 'soundFinished') {
+        playSoundButton.textContent = 'Play';
+        isPreviewPlaying = false;
+    }
+  });
 });
