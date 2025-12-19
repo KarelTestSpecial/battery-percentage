@@ -90,6 +90,7 @@ async function updateIcon(userTextColor) {
 
 // Web Audio API setup for volume amplification
 let audioContext;
+let currentSource = null;
 
 function getAudioContext() {
   if (!audioContext) {
@@ -98,9 +99,18 @@ function getAudioContext() {
   return audioContext;
 }
 
+function stopCurrentSound() {
+    if (currentSource) {
+        currentSource.stop();
+        currentSource = null;
+    }
+}
+
 // Function to play the notification sound using Web Audio API
 async function playNotificationSound(soundPath, volume) {
   if (!soundPath) return;
+
+  stopCurrentSound();
 
   try {
     const context = getAudioContext();
@@ -114,6 +124,13 @@ async function playNotificationSound(soundPath, volume) {
 
     const source = context.createBufferSource();
     source.buffer = audioBuffer;
+    currentSource = source;
+
+    source.onended = () => {
+        if (currentSource === source) {
+            currentSource = null;
+        }
+    };
 
     const gainNode = context.createGain();
     const gainValue = (volume !== undefined ? volume : 100) / 100;
@@ -140,6 +157,9 @@ chrome.runtime.onMessage.addListener((msg) => {
       break;
     case 'playSound':
       playNotificationSound(msg.sound, msg.volume);
+      break;
+    case 'stopSound':
+      stopCurrentSound();
       break;
   }
 });
