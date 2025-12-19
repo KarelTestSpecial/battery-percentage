@@ -56,7 +56,7 @@ async function showNotification(alarm) {
     type: 'playSound',
     sound: alarm.sound,
     duration: alarm.duration,
-    volume: volume !== undefined ? volume : 1
+    volume: volume !== undefined ? volume : 100
   });
 }
 

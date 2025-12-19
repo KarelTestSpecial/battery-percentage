@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const textColor = document.getElementById('text-color-picker').value;
-    const volume = parseFloat(volumeSlider.value);
+    const volume = parseInt(volumeSlider.value, 10);
     chrome.storage.local.set({
       alarms: { charging: chargingAlarms, discharging: dischargingAlarms },
       textColor: textColor,
@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   playSoundButton.addEventListener('click', () => {
     const selectedSound = soundSelectPreview.value;
-    const volume = parseFloat(volumeSlider.value);
+    const volume = parseInt(volumeSlider.value, 10);
     chrome.runtime.sendMessage({ type: 'playSound', sound: selectedSound, volume: volume });
   });
 
@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const loadVolumeSetting = () => {
     chrome.storage.local.get('volume', (result) => {
-      volumeSlider.value = result.volume !== undefined ? result.volume : 1;
+      volumeSlider.value = result.volume !== undefined ? result.volume : 100;
     });
   };
 

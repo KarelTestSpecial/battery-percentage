@@ -88,11 +88,46 @@ async function updateIcon(userTextColor) {
   }
 }
 
-// Function to play the notification sound
-function playNotificationSound(soundPath, volume) {
-  if (soundPath) {
+// Web Audio API setup for volume amplification
+let audioContext;
+
+function getAudioContext() {
+  if (!audioContext) {
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  return audioContext;
+}
+
+// Function to play the notification sound using Web Audio API
+async function playNotificationSound(soundPath, volume) {
+  if (!soundPath) return;
+
+  try {
+    const context = getAudioContext();
+    if (context.state === 'suspended') {
+      await context.resume();
+    }
+
+    const response = await fetch(soundPath);
+    const arrayBuffer = await response.arrayBuffer();
+    const audioBuffer = await context.decodeAudioData(arrayBuffer);
+
+    const source = context.createBufferSource();
+    source.buffer = audioBuffer;
+
+    const gainNode = context.createGain();
+    const gainValue = (volume !== undefined ? volume : 100) / 100;
+    gainNode.gain.value = gainValue;
+
+    source.connect(gainNode);
+    gainNode.connect(context.destination);
+
+    source.start(0);
+  } catch (error) {
+    console.error('Error playing sound with Web Audio API:', error);
+    // Fallback for safety
     const sound = new Audio(soundPath);
-    sound.volume = volume !== undefined ? volume : 1;
+    sound.volume = Math.min(1, (volume !== undefined ? volume : 100) / 100);
     sound.play();
   }
 }
