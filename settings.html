@@ -31,8 +31,13 @@
     }
     .top-row, .bottom-row {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+    }
+    .top-row {
+      justify-content: space-between;
+    }
+    .bottom-row {
+      justify-content: space-around;
     }
     #text-color-container, #dark-mode-container, #volume-control-container {
       display: flex;
@@ -92,29 +97,37 @@
   <div class="controls-container">
       
     <div class="top-row">
-      <div id="text-color-container">
-        <label for="text-color-picker">Text Color</label>
-        <input type="color" id="text-color-picker" value="#FFFFFF">
-      </div>
-      <div id="volume-control-container">
-        <label for="volume-slider">Volume</label>
-        <input type="range" id="volume-slider" min="0" max="200" step="1" value="100">
-      </div>
-      <div id="dark-mode-container">
-        <label for="dark-mode-toggle">Dark Mode</label>
-        <input type="checkbox" id="dark-mode-toggle" />
-      </div>
-    </div>
       
-    <div class="bottom-row">
       <div class="sound-preview-container">
         <div class="sound-preview-inner">
           <select id="sound-select"></select>
           <button id="play-sound-button">Sound Preview</button>
         </div>
       </div>
-      <button id="save-button">Save Settings</button>
+
+      <div id="volume-control-container">
+        <label for="volume-slider">🔊</label>
+        <input type="range" id="volume-slider" min="0" max="200" step="1" value="100">
+      </div>
+
     </div>
+
+    <div class="bottom-row">
+
+      <div id="text-color-container">
+        <label for="text-color-picker">Text Color</label>
+        <input type="color" id="text-color-picker" value="#FFFFFF">
+      </div>
+
+      <button id="save-button">Save Settings</button>
+
+      <div id="dark-mode-container">
+        <label for="dark-mode-toggle">Dark Mode</label>
+        <input type="checkbox" id="dark-mode-toggle" />
+      </div>
+
+    </div>
+
   </div>
 
   <script src="settings.js"></script>
