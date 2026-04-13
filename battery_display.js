@@ -32,13 +32,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   });
 
-  // Wissel van donkere modus bij klikken
+  // Wissel van donkere modus bij klikken op het percentage
   batteryPercentageElement.addEventListener('click', () => {
+    chrome.storage.local.get('darkMode', (result) => {
+      const newMode = !(result.darkMode || false);
+      chrome.storage.local.set({ darkMode: newMode });
+    });
+  });
+
+  // Open instellingen bij klikken op het tandwiel
+  const settingsBtn = document.getElementById('settings-btn');
+  settingsBtn.addEventListener('click', () => {
     chrome.windows.create({
       url: 'settings.html',
       type: 'popup',
-      width: 400,
-      height: 600
+      width: 450,
+      height: 700
     });
   });
 

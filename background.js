@@ -77,13 +77,21 @@ chrome.runtime.onMessage.addListener((msg) => {
   }
 });
 
-chrome.action.onClicked.addListener(() => {
-  chrome.windows.create({
-    url: 'battery_display.html',
-    type: 'popup',
-    width: 220,
-    height: 130
-  });
+chrome.action.onClicked.addListener(async () => {
+  const tabs = await chrome.tabs.query({ url: chrome.runtime.getURL('battery_display.html') });
+  
+  if (tabs.length > 0) {
+    // Venster is al open, breng het naar de voorgrond
+    chrome.windows.update(tabs[0].windowId, { focused: true });
+  } else {
+    // Geen venster open, maak een nieuwe aan
+    chrome.windows.create({
+      url: 'battery_display.html',
+      type: 'popup',
+      width: 220,
+      height: 130
+    });
+  }
 });
 
 // Bestaande triggers blijven hetzelfde
@@ -102,7 +110,7 @@ chrome.runtime.onInstalled.addListener((details) => {
       type: 'basic',
       iconUrl: 'icon128.png',
       title: 'Thanks for installing!',
-      message: 'Click the numbers in the pop-up to open settings and configure alarms.'
+      message: 'Click the gear icon in the pop-up to open settings, or click the number to toggle Dark Mode.'
     });
   }
 });

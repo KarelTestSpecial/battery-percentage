@@ -35,7 +35,7 @@ async function updateIcon(userTextColor) {
     } else if (battery.charging) {
       fontSize = 33;
       if (isDarkMode) {
-        ctx.fillStyle = '#000084';
+        ctx.fillStyle = '#0000FF';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
       }
     } else if (level <= 20) {
