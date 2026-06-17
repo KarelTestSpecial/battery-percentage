@@ -1,12 +1,3 @@
-# Chrome Web Store listing — Battery Percentage
-
-## Name
-Battery Percentage
-
-## Short description
-Displays the battery percentage in digital form on the toolbar or its own floating window, and sends smart notifications.
-
-## Detailed description
 Battery Percentage makes it easy to keep track of your device's battery level. It displays the battery percentage in digital form directly on your toolbar or in its own floating window, and sends smart notifications when your battery is low or fully charged.
 
 MORE FROM THIS DEVELOPER
